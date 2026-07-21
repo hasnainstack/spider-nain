@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPIDER-NAIN · Issue #1</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bubblegum+Sans&family=Fredoka+One&family=Permanent+Marker&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ░░░ WEB CURSOR CANVAS ░░░ -->
+  <canvas id="cursor-canvas"></canvas>
+
+  <!-- ░░░ CONFETTI CANVAS ░░░ -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ░░░ LOADING SCREEN ░░░ -->
+  <div id="loading-screen">
+    <div class="load-web">
+      <svg viewBox="0 0 200 200" id="web-svg">
+        <circle cx="100" cy="100" r="10"  fill="none" stroke="#ff1744" stroke-width="2"/>
+        <circle cx="100" cy="100" r="30"  fill="none" stroke="#ff1744" stroke-width="1.5" stroke-dasharray="5,5"/>
+        <circle cx="100" cy="100" r="60"  fill="none" stroke="#ff4081" stroke-width="1" stroke-dasharray="5,10"/>
+        <circle cx="100" cy="100" r="90"  fill="none" stroke="#1565c0" stroke-width="1" stroke-dasharray="4,12"/>
+        <line x1="100" y1="10" x2="100" y2="190" stroke="white" stroke-width=".8" opacity=".4"/>
+        <line x1="10" y1="100" x2="190" y2="100" stroke="white" stroke-width=".8" opacity=".4"/>
+        <line x1="30" y1="30" x2="170" y2="170" stroke="white" stroke-width=".8" opacity=".4"/>
+        <line x1="170" y1="30" x2="30" y2="170" stroke="white" stroke-width=".8" opacity=".4"/>
+      </svg>
+    </div>
+    <h1 class="load-title">SPIDER-NAIN</h1>
+    <p class="load-sub">Spinning up the universe…</p>
+    <div class="load-bar-wrap"><div class="load-bar" id="load-bar"></div></div>
+  </div>
+
+  <!-- ░░░ MUSIC HUD ░░░ -->
+  <div id="music-hud" class="hud-hidden">
+    <button id="music-btn" onclick="AudioEngine.toggle()">
+      <span id="music-icon">🎵</span>
+    </button>
+    <div class="music-info">
+      <span id="music-track">SPIDER-NAIN THEME</span>
+      <div class="music-bars">
+        <span class="bar" id="b1"></span>
+        <span class="bar" id="b2"></span>
+        <span class="bar" id="b3"></span>
+        <span class="bar" id="b4"></span>
+        <span class="bar" id="b5"></span>
+      </div>
+    </div>
+    <input type="range" id="vol-slider" min="0" max="100" value="60"
+           oninput="AudioEngine.setVolume(this.value)" title="Volume">
+  </div>
+
+  <!-- ░░░ SCORE HUD ░░░ -->
+  <div id="score-hud">
+    <div class="score-label">PANELS FILLED</div>
+    <div class="score-val"><span id="score-num">0</span><span>/5</span></div>
+    <div class="score-stars" id="score-stars">☆☆☆☆☆</div>
+  </div>
+
+  <!-- ░░░ STICKER TOOLBAR ░░░ -->
+  <div id="sticker-bar">
+    <div class="sticker-label">STICKERS</div>
+    <div class="sticker-list" id="sticker-list"></div>
+  </div>
+
+  <!-- ░░░ PROCESSING OVERLAY ░░░ -->
+  <div id="proc-overlay">
+    <div class="spin-ring"></div>
+    <div class="proc-text">COMIC-IFYING! ✨</div>
+    <div class="proc-sub">Applying halftone sorcery…</div>
+  </div>
+
+  <!-- ░░░ HEADER ░░░ -->
+  <header>
+    <div class="title-wrap">
+      <div class="deco-star" id="ds1">⭐</div>
+      <div class="deco-star" id="ds2">💫</div>
+      <div class="deco-star" id="ds3">✨</div>
+      <h1 class="main-title" id="main-title" contenteditable="true" spellcheck="false">SPIDER-NAIN</h1>
+      <div class="issue-badge" contenteditable="true" spellcheck="false">✨ ISSUE #1 · THE CAMPUS ORIGIN ✨</div>
+    </div>
+
+    <div class="header-controls">
+      <button class="ctrl-btn red" onclick="document.getElementById('bulk-upload').click()">
+        📂 LOAD PHOTOS
+      </button>
+      <input type="file" id="bulk-upload" multiple accept="image/*" style="display:none"
+             onchange="Comics.handleBulkUpload(this)" />
+      <button class="ctrl-btn yellow" onclick="Comics.resetAll()">🔄 RESET</button>
+      <button class="ctrl-btn teal" onclick="Comics.saveComic()">💾 SAVE</button>
+      <button class="ctrl-btn pink" id="web-shoot-btn" onclick="FX.webShootMode()">🕸️ WEB MODE</button>
+    </div>
+    <p class="header-hint">Drop photos onto panels · Drag stickers · Click anywhere to shoot webs!</p>
+  </header>
+
+  <!-- ░░░ TICKER ░░░ -->
+  <div class="ticker">
+    <div class="ticker-inner" id="ticker-inner">
+      🕷️ SPIDER-NAIN · CAMPUS HERO · ISSUE #1 ON SALE NOW · THWIP! · POW! · ZAP! · FRIENDLY NEIGHBOURHOOD LEGEND ·&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <!-- ░░░ COMIC GRID ░░░ -->
+  <main class="comic-grid" id="comic-grid">
+
+    <!-- PANEL 1 -->
+    <article class="panel p1 panel-locked" id="panel-1" data-panel="1"
+             ondragover="Comics.dragOver(event,this)"
+             ondragleave="Comics.dragLeave(this)"
+             ondrop="Comics.dropFile(event,this,1)">
+      <div class="panel-lock-overlay" id="lock-1">
+        <span class="lock-icon">🔒</span>
+        <span class="lock-text">SCROLL TO UNLOCK</span>
+      </div>
+      <div class="web-corner top-right"></div>
+      <div class="caption cap-yellow" style="top:12px;left:12px;" contenteditable="true" spellcheck="false">
+        MEET HASSNAIN – 18, A TEEN WITH A COMPLICATED SOCIAL LIFE.
+      </div>
+      <div class="bubble thought" style="bottom:55px;right:12px;" contenteditable="true" spellcheck="false">
+        "Why does talking to people feel like a side quest…?"
+      </div>
+      <span class="sparkle" style="bottom:10px;left:12px;animation-delay:.2s;">🌟</span>
+      <div class="drop-zone" id="dz-1" ondragover="event.preventDefault()" ondrop="Comics.changeIcon(event, 1)" onclick="Comics.openFolder(1)">
+        <input type="file" id="file-1" accept="image/*" style="display:none" onchange="Comics.handleSingleUpload(this, 1)">
+        <div class="dz-icon bounce" id="icon-1" draggable="true" ondragstart="Comics.dragIcon(event, '🛏️')">🛏️</div>
+        <div class="dz-title" contenteditable="true" spellcheck="false">PANEL 1: BEDROOM</div>
+        <div class="dz-hint">Drop your photo here!</div>
+      </div>
+      <div class="art-layer" id="art-1"></div>
+      <div class="halftone-dot"></div>
+      <div class="filter-bar" id="fb-1">
+        <button class="fb active" onclick="Comics.setFilter(1,'comic',this)">COMIC</button>
+        <button class="fb" onclick="Comics.setFilter(1,'neon',this)">NEON</button>
+        <button class="fb" onclick="Comics.setFilter(1,'retro',this)">RETRO</button>
+        <button class="fb bw" onclick="Comics.setFilter(1,'bw',this)">B&W</button>
+        <button class="fb" onclick="Comics.setFilter(1,'raw',this)">RAW</button>
+      </div>
+    </article>
+
+    <!-- PANEL 2 -->
+    <article class="panel p2 panel-locked" id="panel-2" data-panel="2"
+             ondragover="Comics.dragOver(event,this)"
+             ondragleave="Comics.dragLeave(this)"
+             ondrop="Comics.dropFile(event,this,2)">
+      <div class="panel-lock-overlay" id="lock-2">
+        <span class="lock-icon">🔒</span>
+        <span class="lock-text">SCROLL TO UNLOCK</span>
+      </div>
+      <div class="caption cap-teal" style="top:12px;right:12px;transform:skew(3deg);" contenteditable="true" spellcheck="false">
+        OBSESSED WITH MAKING THE LIFT ARRIVE FASTER.
+      </div>
+      <div class="ono" style="bottom:18%;left:8%;--rot:-15deg;font-size:3rem;" contenteditable="true" spellcheck="false">TAP TAP!</div>
+      <div class="ono" style="bottom:10%;left:30%;--rot:5deg;font-size:1.8rem;color:var(--teal);text-shadow:3px 3px 0 var(--blue);" contenteditable="true" spellcheck="false">PING!</div>
+      <span class="sparkle" style="top:14px;left:14px;font-size:1rem;animation-delay:.7s;">⚡</span>
+      <div class="drop-zone" id="dz-2" ondragover="event.preventDefault()" ondrop="Comics.changeIcon(event, 2)" onclick="Comics.openFolder(2)">
+        <input type="file" id="file-2" accept="image/*" style="display:none" onchange="Comics.handleSingleUpload(this, 2)">
+        <div class="dz-icon bounce" id="icon-2" draggable="true" ondragstart="Comics.dragIcon(event, '🛗')">🛗</div>
+        <div class="dz-title" contenteditable="true" spellcheck="false">PANEL 2: LIFT LOBBY</div>
+        <div class="dz-hint">Drop your photo here!</div>
+      </div>
+      <div class="art-layer" id="art-2"></div>
+      <div class="halftone-dot"></div>
+      <div class="filter-bar" id="fb-2">
+        <button class="fb active" onclick="Comics.setFilter(2,'comic',this)">COMIC</button>
+        <button class="fb" onclick="Comics.setFilter(2,'neon',this)">NEON</button>
+        <button class="fb" onclick="Comics.setFilter(2,'retro',this)">RETRO</button>
+        <button class="fb bw" onclick="Comics.setFilter(2,'bw',this)">B&W</button>
+        <button class="fb" onclick="Comics.setFilter(2,'raw',this)">RAW</button>
+      </div>
+    </article>
+
+    <!-- PANEL 3 -->
+    <article class="panel p3 panel-locked" id="panel-3" data-panel="3"
+             ondragover="Comics.dragOver(event,this)"
+             ondragleave="Comics.dragLeave(this)"
+             ondrop="Comics.dropFile(event,this,3)">
+      <div class="panel-lock-overlay" id="lock-3">
+        <span class="lock-icon">🔒</span>
+        <span class="lock-text">SCROLL TO UNLOCK</span>
+      </div>
+      <div class="caption cap-pink" style="bottom:12px;left:12px;transform:skew(-4deg);" contenteditable="true" spellcheck="false">
+        ONE BITE CHANGES EVERYTHING.
+      </div>
+      <div class="ono" style="top:12px;right:8%;--rot:8deg;font-size:2.5rem;color:var(--pink);text-shadow:3px 3px 0 #111;" contenteditable="true" spellcheck="false">CHOMP!</div>
+      <div class="drop-zone" id="dz-3" ondragover="event.preventDefault()" ondrop="Comics.changeIcon(event, 3)" onclick="Comics.openFolder(3)">
+        <input type="file" id="file-3" accept="image/*" style="display:none" onchange="Comics.handleSingleUpload(this, 3)">
+        <div class="dz-icon bounce" id="icon-3" draggable="true" ondragstart="Comics.dragIcon(event, '🕷️')">🕷️</div>
+        <div class="dz-title" contenteditable="true" spellcheck="false">PANEL 3: THE BITE</div>
+        <div class="dz-hint">Your dramatic moment!</div>
+      </div>
+      <div class="art-layer" id="art-3"></div>
+      <div class="halftone-dot"></div>
+      <div class="filter-bar" id="fb-3">
+        <button class="fb active" onclick="Comics.setFilter(3,'comic',this)">COMIC</button>
+        <button class="fb" onclick="Comics.setFilter(3,'neon',this)">NEON</button>
+        <button class="fb" onclick="Comics.setFilter(3,'retro',this)">RETRO</button>
+        <button class="fb bw" onclick="Comics.setFilter(3,'bw',this)">B&W</button>
+        <button class="fb" onclick="Comics.setFilter(3,'raw',this)">RAW</button>
+      </div>
+    </article>
+
+    <!-- PANEL 4 -->
+    <article class="panel p4 panel-locked" id="panel-4" data-panel="4"
+             ondragover="Comics.dragOver(event,this)"
+             ondragleave="Comics.dragLeave(this)"
+             ondrop="Comics.dropFile(event,this,4)">
+      <div class="panel-lock-overlay" id="lock-4">
+        <span class="lock-icon">🔒</span>
+        <span class="lock-text">SCROLL TO UNLOCK</span>
+      </div>
+      <div class="web-corner top-left" style="transform:none;left:0;top:0;"></div>
+      <div class="caption cap-yellow" style="top:12px;left:12px;font-size:1rem;" contenteditable="true" spellcheck="false">
+        HE BECOMES… 🕷️ SPIDER-NAIN! 🕷️
+      </div>
+      <div class="ono" style="bottom:10%;right:5%;--rot:-5deg;font-size:4rem;" contenteditable="true" spellcheck="false">THWIP!</div>
+      <div class="bubble" style="bottom:20%;left:10%;" contenteditable="true" spellcheck="false">
+        "With great lifting power comes great responsibility!"
+      </div>
+      <span class="sparkle" style="top:55px;right:28%;font-size:2rem;">✨</span>
+      <span class="sparkle" style="bottom:28%;right:18%;animation-delay:1s;font-size:1.2rem;">🌟</span>
+      <div class="drop-zone" id="dz-4" ondragover="event.preventDefault()" ondrop="Comics.changeIcon(event, 4)" onclick="Comics.openFolder(4)">
+        <input type="file" id="file-4" accept="image/*" style="display:none" onchange="Comics.handleSingleUpload(this, 4)">
+        <div class="dz-icon bounce" id="icon-4" draggable="true" ondragstart="Comics.dragIcon(event, '🦸')">🦸</div>
+        <div class="dz-title" contenteditable="true" spellcheck="false">PANEL 4: TRANSFORMATION!</div>
+        <div class="dz-hint">Your hero reveal here!</div>
+      </div>
+      <div class="art-layer" id="art-4"></div>
+      <div class="halftone-dot"></div>
+      <div class="filter-bar" id="fb-4">
+        <button class="fb active" onclick="Comics.setFilter(4,'comic',this)">COMIC</button>
+        <button class="fb" onclick="Comics.setFilter(4,'neon',this)">NEON</button>
+        <button class="fb" onclick="Comics.setFilter(4,'retro',this)">RETRO</button>
+        <button class="fb bw" onclick="Comics.setFilter(4,'bw',this)">B&W</button>
+        <button class="fb" onclick="Comics.setFilter(4,'raw',this)">RAW</button>
+      </div>
+    </article>
+
+    <!-- PANEL 5 -->
+    <article class="panel p5 panel-locked" id="panel-5" data-panel="5"
+             ondragover="Comics.dragOver(event,this)"
+             ondragleave="Comics.dragLeave(this)"
+             ondrop="Comics.dropFile(event,this,5)">
+      <div class="panel-lock-overlay" id="lock-5">
+        <span class="lock-icon">🔒</span>
+        <span class="lock-text">SCROLL TO UNLOCK</span>
+      </div>
+      <div class="caption cap-yellow" style="top:14px;left:50%;transform:translateX(-50%) skew(-3deg);max-width:65%;text-align:center;" contenteditable="true" spellcheck="false">
+        TRAINING IN THE ONLY PLACE HE KNOWS BEST.
+      </div>
+      <div class="ono" style="bottom:14%;left:5%;--rot:-8deg;font-size:2.5rem;" contenteditable="true" spellcheck="false">ZOOM!</div>
+      <div class="ono" style="bottom:14%;right:5%;--rot:8deg;font-size:2.5rem;color:var(--teal);text-shadow:3px 3px 0 var(--blue);" contenteditable="true" spellcheck="false">POW!</div>
+      <span class="sparkle" style="bottom:18px;left:50%;transform:translateX(-50%);font-size:2rem;">🕷️</span>
+      <div class="drop-zone" id="dz-5" ondragover="event.preventDefault()" ondrop="Comics.changeIcon(event, 5)" onclick="Comics.openFolder(5)">
+        <input type="file" id="file-5" accept="image/*" style="display:none" onchange="Comics.handleSingleUpload(this, 5)">
+        <div class="dz-icon bounce" id="icon-5" draggable="true" ondragstart="Comics.dragIcon(event, '🏋️')">🏋️</div>
+        <div class="dz-title" contenteditable="true" spellcheck="false">PANEL 5: TRAINING MONTAGE!</div>
+        <div class="dz-hint">The epic final panel!</div>
+      </div>
+      <div class="art-layer" id="art-5"></div>
+      <div class="halftone-dot"></div>
+      <div class="filter-bar" id="fb-5">
+        <button class="fb active" onclick="Comics.setFilter(5,'comic',this)">COMIC</button>
+        <button class="fb" onclick="Comics.setFilter(5,'neon',this)">NEON</button>
+        <button class="fb" onclick="Comics.setFilter(5,'retro',this)">RETRO</button>
+        <button class="fb bw" onclick="Comics.setFilter(5,'bw',this)">B&W</button>
+        <button class="fb" onclick="Comics.setFilter(5,'raw',this)">RAW</button>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- ░░░ FOOTER ░░░ -->
+  <footer>
+    <div class="footer-inner">
+      <span class="comic-font">SPIDER-NAIN COMICS</span>
+      <span>·</span>
+      <span>Issue #1 · Campus Origin</span>
+      <span>·</span>
+      <span>All photos auto-transformed 🕷️</span>
+    </div>
+  </footer>
+
+  <!-- ░░░ HIDDEN PROCESSING CANVAS ░░░ -->
+  <canvas id="process-canvas" style="display:none"></canvas>
+
+  <!-- ░░░ CELEBRATION MODAL ░░░ -->
+  <div id="celebrate-modal" class="modal-hidden">
+    <div class="celebrate-inner">
+      <div class="cel-title">🎉 COMIC COMPLETE! 🎉</div>
+      <div class="cel-sub" id="vibe-text">All 5 panels are filled, hero!</div>
+      <div class="cel-spider">🕷️</div>
+      <button class="ctrl-btn red" onclick="document.getElementById('celebrate-modal').classList.add('modal-hidden')">
+        AWESOME!
+      </button>
+    </div>
+  </div>
+
+  <script src="music.js"></script>
+  <script src="filters.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
