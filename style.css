@@ -511,6 +511,23 @@ header {
 .panel.unlocked { filter: none; }
 .panel.unlocked .panel-lock-overlay { opacity: 0; pointer-events: none; }
 
+/* ── Panel clear button ── */
+.panel-clear-btn {
+  position: absolute; top: 6px; right: 6px; z-index: 35;
+  background: rgba(0,0,0,.6);
+  border: 1.5px solid rgba(255,255,255,.3);
+  color: white;
+  border-radius: 50%;
+  width: 22px; height: 22px;
+  font-size: .7rem;
+  cursor: pointer;
+  display: none;
+  align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.panel-clear-btn:hover { background: var(--red); border-color: var(--red); }
+.panel:hover .panel-clear-btn { display: flex; }
+
 /* ── Art layer ── */
 .art-layer {
   position: absolute; inset: 0; z-index: 1;
@@ -837,3 +854,75 @@ footer {
   margin: .5rem 0 1.5rem;
 }
 @keyframes celBounce { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-16px) rotate(5deg); } }
+
+/* ══════════════ PRINT / SAVE AS PDF ══════════════ */
+@media print {
+  @page { size: A4 landscape; margin: 8mm; }
+
+  /* hide everything except the grid */
+  body > *:not(.comic-grid) { display: none !important; }
+  #cursor-canvas, #confetti-canvas,
+  #loading-screen, #music-hud, #score-hud,
+  #sticker-bar, #proc-overlay,
+  header, .ticker, footer,
+  #celebrate-modal { display: none !important; }
+
+  /* reset body */
+  body {
+    background: white !important;
+    cursor: auto !important;
+  }
+  body::before, body::after { display: none !important; }
+
+  /* grid fills the page */
+  .comic-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, 1fr) !important;
+    gap: 4px !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+  }
+
+  /* panels: clean comic borders, no hover fx */
+  .panel {
+    border: 3px solid #111 !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    min-height: unset !important;
+    animation: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    break-inside: avoid;
+  }
+  .panel:hover { transform: none !important; box-shadow: none !important; }
+
+  /* hide all UI chrome inside panels */
+  .drop-zone, .filter-bar, .panel-lock-overlay,
+  .panel-clear-btn, .halftone-dot { display: none !important; }
+
+  /* art fills panel */
+  .art-layer {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+  }
+  .art-layer img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  /* keep captions, bubbles, ono, stickers visible */
+  .caption, .bubble, .ono, .sparkle, .placed-sticker,
+  .web-corner { display: block !important; }
+
+  .ono { animation: none !important; transform: rotate(var(--rot, 0deg)) !important; }
+  .sparkle { animation: none !important; }
+}

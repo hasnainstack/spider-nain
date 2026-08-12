@@ -18,6 +18,7 @@ let filledPanels    = 0;
 let selectedSticker = null;
 let webShootActive  = false;
 let webLines        = [];
+let placedStickers  = [];
 
 // ─────────────────────────────────────────────────────────
 //  BOOT: Loading Screen
@@ -197,6 +198,51 @@ const Comics = {
   saveComic() {
     AudioEngine.sfx.thwip();
     window.print();
+  },
+
+  randomizeText() {
+    const captions = [
+      'WITH GREAT POWER COMES GREAT RESPONSIBILITY.',
+      'YOUR FRIENDLY NEIGHBOURHOOD HERO IS HERE!',
+      'THWIP! ANOTHER DAY, ANOTHER VILLAIN.',
+      'CAMPUS BY DAY. HERO BY NIGHT.',
+      'THE SPIDER SENSES ARE TINGLING…',
+      'NO ONE EXPECTS THE SPIDER-NAIN!',
+      'JUST A KID FROM THE CAMPUS.',
+      'BITTEN. CHANGED. UNSTOPPABLE.',
+    ];
+    const bubbles = [
+      '"I should be studying right now…"',
+      '"My spidey sense is going CRAZY!"',
+      '"Not today, villain!"',
+      '"Why does this always happen to me?"',
+      '"THWIP THWIP THWIP!"',
+      '"I am SO late for class."',
+      '"Nobody panic. I got this. Maybe."',
+    ];
+    const onos = ['POW!','ZAP!','THWIP!','BAM!','WHAM!','CRASH!','BOOM!','SNAP!','WHOOSH!','KAPOW!'];
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    document.querySelectorAll('.caption').forEach(el => { el.textContent = pick(captions); });
+    document.querySelectorAll('.bubble').forEach(el => { el.textContent = pick(bubbles); });
+    document.querySelectorAll('.ono').forEach(el => { el.textContent = pick(onos); });
+    AudioEngine.sfx.pow();
+    Confetti.burst(window.innerWidth / 2, window.innerHeight / 2, 25);
+  },
+
+  clearPanel(panelId) {
+    if (!rawImages[panelId]) return;
+    document.getElementById(`art-${panelId}`).innerHTML = '';
+    document.getElementById(`art-${panelId}`).classList.remove('revealed');
+    const dz = document.getElementById(`dz-${panelId}`);
+    dz.style.cssText = '';
+    document.getElementById(`fb-${panelId}`).classList.remove('visible');
+    delete rawImages[panelId];
+    filters[panelId] = 'comic';
+    document.querySelectorAll(`#fb-${panelId} .fb`).forEach((b, idx) => b.classList.toggle('active', idx === 0));
+    filledPanels = Object.keys(rawImages).length;
+    Comics._updateScore();
+    AudioEngine.sfx.click();
   },
 
   // ── Private ────────────────────────────────────
@@ -543,6 +589,7 @@ document.addEventListener('click', (e) => {
   sEl.addEventListener('dblclick', (ev) => { sEl.remove(); ev.stopPropagation(); });
 
   panel.appendChild(sEl);
+  placedStickers.push(sEl);
   AudioEngine.sfx.click();
   Confetti.burst(e.clientX, e.clientY, 12);
 });
@@ -598,6 +645,7 @@ document.addEventListener('drop', (e) => {
   sEl.addEventListener('dblclick', (ev) => { sEl.remove(); ev.stopPropagation(); });
 
   panel.appendChild(sEl);
+  placedStickers.push(sEl);
   AudioEngine.sfx.click();
   Confetti.burst(e.clientX, e.clientY, 12);
 });
@@ -616,6 +664,11 @@ document.getElementById('main-title').addEventListener('click', () => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'm' || e.key === 'M') AudioEngine.toggle();
   if (e.key === 'w' || e.key === 'W') FX.webShootMode();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    const last = placedStickers.pop();
+    if (last && last.parentNode) { last.remove(); AudioEngine.sfx.click(); }
+    return;
+  }
   if (e.key === 'Escape') {
     selectedSticker = null;
     webShootActive  = false;

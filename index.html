@@ -90,7 +90,8 @@
       <input type="file" id="bulk-upload" multiple accept="image/*" style="display:none"
              onchange="Comics.handleBulkUpload(this)" />
       <button class="ctrl-btn yellow" onclick="Comics.resetAll()">🔄 RESET</button>
-      <button class="ctrl-btn teal" onclick="Comics.saveComic()">💾 SAVE</button>
+      <button class="ctrl-btn teal" onclick="Comics.saveComic()">💾 SAVE PNG</button>
+      <button class="ctrl-btn blue" onclick="Comics.randomizeText()">🎲 RANDOM TEXT</button>
       <button class="ctrl-btn pink" id="web-shoot-btn" onclick="FX.webShootMode()">🕸️ WEB MODE</button>
     </div>
     <p class="header-hint">Drop photos onto panels · Drag stickers · Click anywhere to shoot webs!</p>
@@ -98,7 +99,7 @@
 
   <!-- ░░░ TICKER ░░░ -->
   <div class="ticker">
-    <div class="ticker-inner" id="ticker-inner">
+    <div class="ticker-inner" id="ticker-inner" contenteditable="true" spellcheck="false" title="Click to edit ticker text">
       🕷️ SPIDER-NAIN · CAMPUS HERO · ISSUE #1 ON SALE NOW · THWIP! · POW! · ZAP! · FRIENDLY NEIGHBOURHOOD LEGEND ·&nbsp;&nbsp;
     </div>
   </div>
@@ -108,9 +109,11 @@
 
     <!-- PANEL 1 -->
     <article class="panel p1 panel-locked" id="panel-1" data-panel="1"
+             draggable="false"
              ondragover="Comics.dragOver(event,this)"
              ondragleave="Comics.dragLeave(this)"
              ondrop="Comics.dropFile(event,this,1)">
+      <button class="panel-clear-btn" onclick="Comics.clearPanel(1)" title="Clear panel">✕</button>
       <div class="panel-lock-overlay" id="lock-1">
         <span class="lock-icon">🔒</span>
         <span class="lock-text">SCROLL TO UNLOCK</span>
@@ -142,9 +145,11 @@
 
     <!-- PANEL 2 -->
     <article class="panel p2 panel-locked" id="panel-2" data-panel="2"
+             draggable="false"
              ondragover="Comics.dragOver(event,this)"
              ondragleave="Comics.dragLeave(this)"
              ondrop="Comics.dropFile(event,this,2)">
+      <button class="panel-clear-btn" onclick="Comics.clearPanel(2)" title="Clear panel">✕</button>
       <div class="panel-lock-overlay" id="lock-2">
         <span class="lock-icon">🔒</span>
         <span class="lock-text">SCROLL TO UNLOCK</span>
@@ -174,9 +179,11 @@
 
     <!-- PANEL 3 -->
     <article class="panel p3 panel-locked" id="panel-3" data-panel="3"
+             draggable="false"
              ondragover="Comics.dragOver(event,this)"
              ondragleave="Comics.dragLeave(this)"
              ondrop="Comics.dropFile(event,this,3)">
+      <button class="panel-clear-btn" onclick="Comics.clearPanel(3)" title="Clear panel">✕</button>
       <div class="panel-lock-overlay" id="lock-3">
         <span class="lock-icon">🔒</span>
         <span class="lock-text">SCROLL TO UNLOCK</span>
@@ -204,9 +211,11 @@
 
     <!-- PANEL 4 -->
     <article class="panel p4 panel-locked" id="panel-4" data-panel="4"
+             draggable="false"
              ondragover="Comics.dragOver(event,this)"
              ondragleave="Comics.dragLeave(this)"
              ondrop="Comics.dropFile(event,this,4)">
+      <button class="panel-clear-btn" onclick="Comics.clearPanel(4)" title="Clear panel">✕</button>
       <div class="panel-lock-overlay" id="lock-4">
         <span class="lock-icon">🔒</span>
         <span class="lock-text">SCROLL TO UNLOCK</span>
@@ -240,9 +249,11 @@
 
     <!-- PANEL 5 -->
     <article class="panel p5 panel-locked" id="panel-5" data-panel="5"
+             draggable="false"
              ondragover="Comics.dragOver(event,this)"
              ondragleave="Comics.dragLeave(this)"
              ondrop="Comics.dropFile(event,this,5)">
+      <button class="panel-clear-btn" onclick="Comics.clearPanel(5)" title="Clear panel">✕</button>
       <div class="panel-lock-overlay" id="lock-5">
         <span class="lock-icon">🔒</span>
         <span class="lock-text">SCROLL TO UNLOCK</span>
@@ -298,6 +309,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="music.js"></script>
   <script src="filters.js"></script>
   <script src="app.js"></script>
