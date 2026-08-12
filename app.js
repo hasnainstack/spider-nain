@@ -245,6 +245,24 @@ const Comics = {
     AudioEngine.sfx.click();
   },
 
+  loadAsset(src, panelId) {
+    Comics._showOverlay();
+    const img = new Image();
+    img.onload = () => {
+      const c = document.getElementById('process-canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      c.getContext('2d').drawImage(img, 0, 0);
+      const dataUrl = c.toDataURL('image/jpeg', 0.92);
+      rawImages[panelId] = dataUrl;
+      Filters.apply(filters[panelId], dataUrl, (url) => {
+        Comics._setArtImage(panelId, url, false);
+        Comics._hideOverlay();
+        Comics._markFilled(panelId);
+      });
+    };
+    img.src = src;
+  },
+
   // ── Private ────────────────────────────────────
   _loadFile(file, panelId) {
     const reader = new FileReader();

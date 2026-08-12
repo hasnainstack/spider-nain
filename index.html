@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>SPIDER-NAIN · Issue #1</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bubblegum+Sans&family=Fredoka+One&family=Permanent+Marker&display=swap" rel="stylesheet" />
@@ -93,6 +93,7 @@
       <button class="ctrl-btn teal" onclick="Comics.saveComic()">💾 SAVE PNG</button>
       <button class="ctrl-btn blue" onclick="Comics.randomizeText()">🎲 RANDOM TEXT</button>
       <button class="ctrl-btn pink" id="web-shoot-btn" onclick="FX.webShootMode()">🕸️ WEB MODE</button>
+      <button class="ctrl-btn yellow" onclick="document.getElementById('watchlist-modal').classList.remove('modal-hidden')">🎬 WATCH LIST</button>
     </div>
     <p class="header-hint">Drop photos onto panels · Drag stickers · Click anywhere to shoot webs!</p>
   </header>
@@ -306,6 +307,47 @@
       <button class="ctrl-btn red" onclick="document.getElementById('celebrate-modal').classList.add('modal-hidden')">
         AWESOME!
       </button>
+    </div>
+  </div>
+
+  <!-- ░░░ WATCHLIST MODAL ░░░ -->
+  <div id="watchlist-modal" class="modal-hidden">
+    <div class="watchlist-inner">
+      <div class="watchlist-header">
+        <div class="watchlist-title">🎬 SPIDER-MAN WATCH ORDER</div>
+        <button class="watchlist-close" onclick="document.getElementById('watchlist-modal').classList.add('modal-hidden')">✕</button>
+      </div>
+      <div class="watchlist-subtitle">Watch these in order for the full multiverse experience 🕸️</div>
+      <div class="watchlist-scroll">
+        <div class="watch-era">SAM RAIMI TRILOGY</div>
+        <div class="watch-item"><span class="watch-num">1</span><div class="watch-info"><div class="watch-name">Spider-Man</div><div class="watch-meta">2002 &middot; Tobey Maguire &middot; Origin story</div></div><span class="watch-badge new">CLASSIC</span></div>
+        <div class="watch-item"><span class="watch-num">2</span><div class="watch-info"><div class="watch-name">Spider-Man 2</div><div class="watch-meta">2004 &middot; Tobey Maguire &middot; Doctor Octopus</div></div><span class="watch-badge best">#1 RATED</span></div>
+        <div class="watch-item"><span class="watch-num">3</span><div class="watch-info"><div class="watch-name">Spider-Man 3</div><div class="watch-meta">2007 &middot; Tobey Maguire &middot; Venom &amp; Sandman</div></div></div>
+
+        <div class="watch-era">THE AMAZING SPIDER-MAN</div>
+        <div class="watch-item"><span class="watch-num">4</span><div class="watch-info"><div class="watch-name">The Amazing Spider-Man</div><div class="watch-meta">2012 &middot; Andrew Garfield &middot; Lizard</div></div></div>
+        <div class="watch-item"><span class="watch-num">5</span><div class="watch-info"><div class="watch-name">The Amazing Spider-Man 2</div><div class="watch-meta">2014 &middot; Andrew Garfield &middot; Electro &amp; Green Goblin</div></div></div>
+
+        <div class="watch-era">MCU SPIDER-MAN</div>
+        <div class="watch-item"><span class="watch-num">6</span><div class="watch-info"><div class="watch-name">Captain America: Civil War</div><div class="watch-meta">2016 &middot; Tom Holland &middot; Spidey debut</div></div><span class="watch-badge tip">WATCH FIRST</span></div>
+        <div class="watch-item"><span class="watch-num">7</span><div class="watch-info"><div class="watch-name">Spider-Man: Homecoming</div><div class="watch-meta">2017 &middot; Tom Holland &middot; Vulture</div></div></div>
+        <div class="watch-item"><span class="watch-num">8</span><div class="watch-info"><div class="watch-name">Avengers: Infinity War</div><div class="watch-meta">2018 &middot; Tom Holland &middot; The snap</div></div></div>
+        <div class="watch-item"><span class="watch-num">9</span><div class="watch-info"><div class="watch-name">Avengers: Endgame</div><div class="watch-meta">2019 &middot; Tom Holland &middot; The return</div></div></div>
+        <div class="watch-item"><span class="watch-num">10</span><div class="watch-info"><div class="watch-name">Spider-Man: Far From Home</div><div class="watch-meta">2019 &middot; Tom Holland &middot; Mysterio</div></div></div>
+        <div class="watch-item"><span class="watch-num">11</span><div class="watch-info"><div class="watch-name">Spider-Man: No Way Home</div><div class="watch-meta">2021 &middot; All 3 Spider-Men &middot; Multiverse</div></div><span class="watch-badge best">MUST WATCH</span></div>
+
+        <div class="watch-era">ANIMATED</div>
+        <div class="watch-item"><span class="watch-num">12</span><div class="watch-info"><div class="watch-name">Spider-Man: Into the Spider-Verse</div><div class="watch-meta">2018 &middot; Miles Morales &middot; Animated</div></div><span class="watch-badge best">MASTERPIECE</span></div>
+        <div class="watch-item"><span class="watch-num">13</span><div class="watch-info"><div class="watch-name">Spider-Man: Across the Spider-Verse</div><div class="watch-meta">2023 &middot; Miles Morales &middot; Animated</div></div><span class="watch-badge new">NEW</span></div>
+
+        <div class="watch-era">SONY UNIVERSE</div>
+        <div class="watch-item"><span class="watch-num">14</span><div class="watch-info"><div class="watch-name">Venom</div><div class="watch-meta">2018 &middot; Tom Hardy &middot; Anti-hero</div></div></div>
+        <div class="watch-item"><span class="watch-num">15</span><div class="watch-info"><div class="watch-name">Venom: Let There Be Carnage</div><div class="watch-meta">2021 &middot; Tom Hardy &middot; Carnage</div></div></div>
+        <div class="watch-item"><span class="watch-num">16</span><div class="watch-info"><div class="watch-name">Morbius</div><div class="watch-meta">2022 &middot; Jared Leto &middot; Vampire anti-hero</div></div></div>
+        <div class="watch-item"><span class="watch-num">17</span><div class="watch-info"><div class="watch-name">Madame Web</div><div class="watch-meta">2024 &middot; Dakota Johnson &middot; Psychic powers</div></div></div>
+        <div class="watch-item"><span class="watch-num">18</span><div class="watch-info"><div class="watch-name">Kraven the Hunter</div><div class="watch-meta">2024 &middot; Aaron Taylor-Johnson</div></div><span class="watch-badge new">LATEST</span></div>
+      </div>
+      <div class="watchlist-footer">🕷️ Total: 18 films &middot; ~38 hours of web-slinging action</div>
     </div>
   </div>
 
